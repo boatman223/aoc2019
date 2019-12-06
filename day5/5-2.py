@@ -71,8 +71,8 @@ def run_computer(code):
     done = False
     index = 0
     while not done:
-        opcode = f'{code[index]:>05}'[-2:]
-        modes = f'{code[index]:>05}'[0:3][::-1]
+        opcode = f'{code[index]:0>5}'[-2:]
+        modes = f'{code[index]:0>5}'[0:3][::-1]
         increment = get_parameter_count(opcode) + 1
         parameters = code[index+1:index+increment]
         index += increment
