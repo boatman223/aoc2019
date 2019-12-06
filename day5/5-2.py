@@ -27,11 +27,8 @@ def opcode_handlers():
     return handlers
 
 def set_parameter(code, parameter, mode):
-    if mode == '0':
-        val = code[parameter]
-    elif mode == '1':
-        val = parameter
-    return val
+    if mode == '0': return code[parameter]
+    elif mode == '1': return parameter
 
 def op_ADD(code, index, parameters):
     code[code[index-1]] = parameters[0] + parameters[1]
@@ -41,7 +38,7 @@ def op_MUL(code, index, parameters):
     code[code[index-1]] = parameters[0] * parameters[1]
     return code, index, False
 
-def op_IN(code, index, parameters):
+def op_INP(code, index, parameters):
     code[code[index-1]] = inputval
     return code, index, False
 
