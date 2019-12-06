@@ -16,7 +16,7 @@ def opcode_handlers():
     handlers = {
         '01': op_ADD,
         '02': op_MUL,
-        '03': op_IN,
+        '03': op_INP,
         '04': op_OUT,
         '05': op_JIT,
         '06': op_JIF,
