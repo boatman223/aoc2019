@@ -28,99 +28,64 @@ def opcode_handlers():
 
 def set_parameter(code, parameter, mode):
     if mode == '0':
-        val = code[int(parameter)]
+        val = code[parameter]
     elif mode == '1':
         val = parameter
-    return int(val)
+    return val
 
-def opcode_1(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:][0:2]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    writeme = parameters[0] + parameters[1]
-    code[int(parameters[2])] = str(writeme)
-    index += (len(parameters) + 1)
+def opcode_1(code, index, parameters):
+    code[code[index-1]] = parameters[0] + parameters[1]
     return code, index, False
 
-def opcode_2(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:][0:2]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    writeme = parameters[0] * parameters[1]
-    code[int(parameters[2])] = str(writeme)
-    index += (len(parameters) + 1)
+def opcode_2(code, index, parameters):
+    code[code[index-1]] = parameters[0] * parameters[1]
     return code, index, False
 
-def opcode_3(code, index, parameters, modes):
-    code[int(parameters[0])] = inputval
-    index += (len(parameters) + 1)
+def opcode_3(code, index, parameters):
+    code[code[index-1]] = inputval
     return code, index, False
 
-def opcode_4(code, index, parameters, modes):
-    mode = modes[0]
-    parameters[0] = set_parameter(code, parameters[0], mode)
+def opcode_4(code, index, parameters):
     print(f'output: {parameters[0]}')
-    index += (len(parameters) + 1)
     return code, index, False
 
-def opcode_5(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    if parameters[0]:
-        index = parameters[1]
-    else:
-        index += (len(parameters) + 1)
+def opcode_5(code, index, parameters):
+    if parameters[0]: index = parameters[1]
     return code, index, False
 
-def opcode_6(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    if not parameters[0]:
-        index = parameters[1]
-    else:
-        index += (len(parameters) + 1)
+def opcode_6(code, index, parameters):
+    if not parameters[0]: index = parameters[1]
     return code, index, False
 
-def opcode_7(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:][0:2]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    if parameters[0] < parameters[1]:
-        code[int(parameters[2])] = 1
-    else:
-        code[int(parameters[2])] = 0
-    index += (len(parameters) + 1)
+def opcode_7(code, index, parameters):
+    if parameters[0] < parameters[1]: code[code[index-1]] = 1
+    else: code[code[index-1]] = 0
     return code, index, False
 
-def opcode_8(code, index, parameters, modes):
-    for i, parameter in enumerate(parameters[:][0:2]):
-        mode = modes[i]
-        parameters[i] = set_parameter(code, parameter, mode)
-    if parameters[0] == parameters[1]:
-        code[int(parameters[2])] = 1
-    else:
-        code[int(parameters[2])] = 0
-    index += (len(parameters) + 1)
+def opcode_8(code, index, parameters):
+    if parameters[0] == parameters[1]: code[code[index-1]] = 1
+    else: code[code[index-1]] = 0
     return code, index, False
 
-def opcode_99(code, index, parameters, modes):
+def opcode_99(code, index, parameters):
     return code, index, True
 
 def run_computer(code):
     done = False
     index = 0
-    while done == False:
+    while not done:
         opcode = f'{code[index]:>05}'[-2:]
         modes = f'{code[index]:>05}'[0:3][::-1]
-        parameter_count = get_parameter_count(opcode)
-        increment = parameter_count + 1
+        increment = get_parameter_count(opcode) + 1
         parameters = code[index+1:index+increment]
-        code, index, done = opcode_handlers()[opcode](code, index, parameters, modes)
+        index += increment
+        for i, parameter in enumerate(parameters[:]):
+            mode = modes[i]
+            parameters[i] = set_parameter(code, parameter, mode)
+        code, index, done = opcode_handlers()[opcode](code, index, parameters)
 
 with open('input.txt','r') as fh:
-    code = fh.read().strip('\n').split(',')
+    code = [int(i) for i in fh.read().strip('\n').split(',')]
 
-inputval = '5'
+inputval = 5
 run_computer(code)
