@@ -14,15 +14,15 @@ def get_parameter_count(opcode):
 
 def opcode_handlers():
     handlers = {
-        '01': opcode_1,
-        '02': opcode_2,
-        '03': opcode_3,
-        '04': opcode_4,
-        '05': opcode_5,
-        '06': opcode_6,
-        '07': opcode_7,
-        '08': opcode_8,
-        '99': opcode_99
+        '01': op_ADD,
+        '02': op_MUL,
+        '03': op_IN,
+        '04': op_OUT,
+        '05': op_JIT,
+        '06': op_JIF,
+        '07': op_TLT,
+        '08': op_TEQ,
+        '99': op_TRM
     }
     return handlers
 
@@ -33,41 +33,41 @@ def set_parameter(code, parameter, mode):
         val = parameter
     return val
 
-def opcode_1(code, index, parameters):
+def op_ADD(code, index, parameters):
     code[code[index-1]] = parameters[0] + parameters[1]
     return code, index, False
 
-def opcode_2(code, index, parameters):
+def op_MUL(code, index, parameters):
     code[code[index-1]] = parameters[0] * parameters[1]
     return code, index, False
 
-def opcode_3(code, index, parameters):
+def op_IN(code, index, parameters):
     code[code[index-1]] = inputval
     return code, index, False
 
-def opcode_4(code, index, parameters):
+def op_OUT(code, index, parameters):
     print(f'output: {parameters[0]}')
     return code, index, False
 
-def opcode_5(code, index, parameters):
+def op_JIT(code, index, parameters):
     if parameters[0]: index = parameters[1]
     return code, index, False
 
-def opcode_6(code, index, parameters):
+def op_JIF(code, index, parameters):
     if not parameters[0]: index = parameters[1]
     return code, index, False
 
-def opcode_7(code, index, parameters):
+def op_TLT(code, index, parameters):
     if parameters[0] < parameters[1]: code[code[index-1]] = 1
     else: code[code[index-1]] = 0
     return code, index, False
 
-def opcode_8(code, index, parameters):
+def op_TEQ(code, index, parameters):
     if parameters[0] == parameters[1]: code[code[index-1]] = 1
     else: code[code[index-1]] = 0
     return code, index, False
 
-def opcode_99(code, index, parameters):
+def op_TRM(code, index, parameters):
     return code, index, True
 
 def run_computer(code):
