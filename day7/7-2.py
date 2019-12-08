@@ -6,11 +6,11 @@ class Computer:
     PAUSED  = 1
     HALTED  = 2
 
-    def __init__(self, code, pc=0, status=0, stdin=0):
+    def __init__(self, code, pc=0, status=0):
         self.code = code
         self.pc = pc
         self.status = status
-        self.stdin = stdin
+        self.stdin = None
         self.stdout = 0
         self.execute()
 
@@ -58,11 +58,12 @@ class Computer:
         self.code[params[2]] = self.set_param(params[0], modes[0]) * self.set_param(params[1], modes[1])
 
     def op_INP(self, params, modes):
-        if self.status == self.RUNNING:
+        if self.stdin == None:
             self.status = self.PAUSED
-        elif self.status == self.PAUSED:
+        else:
             self.status = self.RUNNING
             self.code[params[0]] = self.stdin
+            self.stdin = None
 
     def op_OUT(self, params, modes):
         self.stdout = self.set_param(params[0], modes[0])
