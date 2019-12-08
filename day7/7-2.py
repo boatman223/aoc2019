@@ -6,11 +6,11 @@ class Computer:
     PAUSED  = 1
     HALTED  = 2
 
-    def __init__(self, code, pc=0):
+    def __init__(self, code, pc=0, stdin=None):
         self.code = code
         self.pc = pc
         self.status = self.RUNNING
-        self.stdin = None
+        self.stdin = stdin
         self.stdout = None
         self.execute()
 
@@ -111,9 +111,8 @@ highest_output = 0
 for test in tests:
     amps = []
     for i in range(0, 5):
-        amp = Computer(basecode)
+        amp = Computer(basecode, stdin=test[i])
         amps.append(amp)
-        amp.send_input(test[i])
     ampcycle = itertools.cycle(amps)
     output = 0
     while amps[4].status != Computer.HALTED:
