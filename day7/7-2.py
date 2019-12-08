@@ -16,7 +16,8 @@ class Computer:
 
     def send_input(self, stdin):
         self.stdin = stdin
-        self.op_INP([self.code[self.pc-1]], '')
+        self.status = self.RUNNING
+        self.pc -= 2
         self.execute()
 
     def get_param_count(self, opcode):
@@ -61,7 +62,6 @@ class Computer:
         if self.stdin == None:
             self.status = self.PAUSED
         else:
-            self.status = self.RUNNING
             self.code[params[0]] = self.stdin
             self.stdin = None
 
