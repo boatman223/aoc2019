@@ -2,7 +2,7 @@ with open('input.txt', 'r') as fh:
     image = fh.read().strip('\n')
 
 length = 25*6
-split = list(map(''.join, zip(*[iter(image)]*length)))
+split = [image[i:i+length] for i in range(0, len(image), length)]
 
 finalimage = ['3']*length
 print(finalimage)
@@ -14,6 +14,6 @@ for layer in split:
                 finalimage[i] = pixel
 
 print(finalimage)
-split = list(map(''.join, zip(*[iter(finalimage)]*25)))
+split = [finalimage[i:i+25] for i in range(0, len(finalimage), 25)]
 for line in split:
-    print(line)
+    print(''.join(line))

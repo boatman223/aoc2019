@@ -2,7 +2,7 @@ with open('input.txt', 'r') as fh:
     image = fh.read().strip('\n')
 
 length = 25*6
-split = list(map(''.join, zip(*[iter(image)]*length)))
+split = [image[i:i+length] for i in range(0, len(image), length)]
 
 lowest = 999
 for i in split:
