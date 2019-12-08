@@ -6,12 +6,12 @@ class Computer:
     PAUSED  = 1
     HALTED  = 2
 
-    def __init__(self, code, pc=0, status=0):
+    def __init__(self, code, pc=0):
         self.code = code
         self.pc = pc
-        self.status = status
+        self.status = self.RUNNING
         self.stdin = None
-        self.stdout = 0
+        self.stdout = None
         self.execute()
 
     def send_input(self, stdin):
