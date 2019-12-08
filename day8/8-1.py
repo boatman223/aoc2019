@@ -1,8 +1,9 @@
 with open('input.txt', 'r') as fh:
     image = fh.read().strip('\n')
 
-length = 25*6
-split = [image[i:i+length] for i in range(0, len(image), length)]
+x = 25
+y = 6
+split = [image[i:i+(x*y)] for i in range(0, len(image), (x*y))]
 
 lowest = 999
 for i in split:
@@ -11,5 +12,4 @@ for i in split:
         lowest = zerocount
         layer = i
 
-print(lowest, layer)
 print(layer.count('1')*layer.count('2'))
