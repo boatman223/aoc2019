@@ -111,7 +111,7 @@ highest_output = 0
 for test in tests:
     amps = []
     for i in range(0, 5):
-        amp = Computer(basecode, stdin=test[i])
+        amp = Computer(basecode[:], stdin=test[i])
         amps.append(amp)
     ampcycle = itertools.cycle(amps)
     output = 0
