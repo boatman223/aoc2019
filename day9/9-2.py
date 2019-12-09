@@ -51,56 +51,56 @@ class Computer:
         }
         return handlers
 
-    def set_param(self, param, mode):
-        if mode == '0': return self.code[param]
-        elif mode == '1': return param
-        elif mode == '2': return self.code[param+self.rbase]
+    def set_param(self, param):
+        if param[1] == '0': return self.code[param[0]]
+        elif param[1] == '1': return param[0]
+        elif param[1] == '2': return self.code[param[0]+self.rbase]
 
-    def set_param_w(self, param, mode):
-        if mode == '0': return param
-        elif mode == '2': return param+self.rbase
+    def set_param_w(self, param):
+        if param[1] == '0': return param[0]
+        elif param[1] == '2': return param[0]+self.rbase
 
-    def op_ADD(self, params, modes):
-        self.code[self.set_param_w(params[2], modes[2])] = self.set_param(params[0], modes[0]) + self.set_param(params[1], modes[1])
+    def op_ADD(self, params):
+        self.code[self.set_param_w(params[2])] = self.set_param(params[0]) + self.set_param(params[1])
 
-    def op_MUL(self, params, modes):
-        self.code[self.set_param_w(params[2], modes[2])] = self.set_param(params[0], modes[0]) * self.set_param(params[1], modes[1])
+    def op_MUL(self, params):
+        self.code[self.set_param_w(params[2])] = self.set_param(params[0]) * self.set_param(params[1])
 
-    def op_INP(self, params, modes):
+    def op_INP(self, params):
         if self.stdin == None:
             self.status = self.PAUSED
         else:
-            self.code[self.set_param_w(params[0], modes[0])] = self.stdin
+            self.code[self.set_param_w(params[0])] = self.stdin
             self.stdin = None
 
-    def op_OUT(self, params, modes):
-        self.stdout = self.set_param(params[0], modes[0])
+    def op_OUT(self, params):
+        self.stdout = self.set_param(params[0])
         print(f'output: {self.stdout}')
 
-    def op_JIT(self, params, modes):
-        if self.set_param(params[0], modes[0]):
-            self.pc = self.set_param(params[1], modes[1])
+    def op_JIT(self, params):
+        if self.set_param(params[0]):
+            self.pc = self.set_param(params[1])
 
-    def op_JIF(self, params, modes):
-        if not self.set_param(params[0], modes[0]):
-            self.pc = self.set_param(params[1], modes[1])
+    def op_JIF(self, params):
+        if not self.set_param(params[0]):
+            self.pc = self.set_param(params[1])
 
-    def op_TLT(self, params, modes):
-        if self.set_param(params[0], modes[0]) < self.set_param(params[1], modes[1]):
-            self.code[self.set_param_w(params[2], modes[2])] = 1
+    def op_TLT(self, params):
+        if self.set_param(params[0]) < self.set_param(params[1]):
+            self.code[self.set_param_w(params[2])] = 1
         else:
-            self.code[self.set_param_w(params[2], modes[2])] = 0
+            self.code[self.set_param_w(params[2])] = 0
 
-    def op_TEQ(self, params, modes):
-        if self.set_param(params[0], modes[0]) == self.set_param(params[1], modes[1]):
-            self.code[self.set_param_w(params[2], modes[2])] = 1
+    def op_TEQ(self, params):
+        if self.set_param(params[0]) == self.set_param(params[1]):
+            self.code[self.set_param_w(params[2])] = 1
         else:
-            self.code[self.set_param_w(params[2], modes[2])] = 0
+            self.code[self.set_param_w(params[2])] = 0
 
-    def op_RBO(self, params, modes):
-        self.rbase += self.set_param(params[0], modes[0])
+    def op_RBO(self, params):
+        self.rbase += self.set_param(params[0])
 
-    def op_TRM(self, params, modes):
+    def op_TRM(self, params):
         self.status = self.HALTED
 
     def execute(self):
@@ -108,9 +108,9 @@ class Computer:
             opcode = f'{self.code[self.pc]:0>5}'[-2:]
             modes = f'{self.code[self.pc]:0>5}'[0:3][::-1]
             increment = self.get_param_count(opcode) + 1
-            params = self.code[self.pc+1:self.pc+increment]
+            params = list(zip(self.code[self.pc+1:self.pc+increment], list(modes)))
             self.pc += increment
-            self.opcode_handlers()[opcode](params, modes)
+            self.opcode_handlers()[opcode](params)
         return
 
 with open('input.txt','r') as fh:
