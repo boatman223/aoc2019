@@ -18,7 +18,7 @@ for asteroid in asteroids.keys():
 sorteda = {k:v for k, v in sorted(asteroids.items(), key = lambda i: (i[1][0], 1/i[1][1]), reverse=True)}
 
 finalorder = []
-while len(sorteda.keys()):
+while sorteda.keys():
     lastnum = 999
     for k in list(sorteda.keys()):
         if sorteda[k][0] == lastnum: continue
