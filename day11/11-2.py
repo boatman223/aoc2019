@@ -132,7 +132,6 @@ class Painter(Computer):
         self.facing = 0
         self.position = (0,0)
         self.tiles = collections.defaultdict(int)
-        self.tiles[(0,0)] = 1
 
     def process_orders(self, data):
         orders = []
