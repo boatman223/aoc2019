@@ -1,4 +1,5 @@
 import itertools
+import collections
 
 class Computer:
 
@@ -130,7 +131,8 @@ class Painter(Computer):
         super().__init__(code, pc, stdin)
         self.facing = 0
         self.position = (0,0)
-        self.tiles = {(0,0): 1}
+        self.tiles = collections.defaultdict(int)
+        self.tiles[(0,0)] = 1
 
     def process_orders(self, data):
         orders = []
@@ -163,22 +165,10 @@ class Painter(Computer):
     def print_image(self):
         xvalues = [i[0] for i in self.tiles.keys()]
         yvalues = [i[1] for i in self.tiles.keys()]
-        x_range = (min(xvalues), max(xvalues))
-        y_range = (min(yvalues), max(yvalues))
-        x_adjust = 0
-        y_adjust = 0
-        if y_range[0] < 0:
-            y_adjust = abs(y_range[0])
-        if x_range[0] < 0:
-            x_adjust = abs(x_range[0])
-        print(x_range, y_range)
-        print(x_adjust, y_adjust)
-
-        for i in reversed(range(0, y_range[1]+y_adjust+1)):
+        for i in reversed(range(min(yvalues), max(yvalues)+1)):
             line = ''
-            for j in range(0, x_range[1]+x_adjust+1):
-                try: line += str(self.tiles[(j-x_adjust,i-y_adjust)])
-                except KeyError: line += '0'
+            for j in range(min(xvalues), max(xvalues)+1):
+                line += str(self.tiles[(j,i)])
             print(line.replace('0', '  ').replace('1', '##'))
 
 with open('input.txt','r') as fh:
@@ -189,9 +179,6 @@ painter = Painter(basecode[:], stdin=1)
 while painter.status != painter.HALTED:
     orders = painter.get_output()
     painter.process_orders(orders)
-    try:
-        painter.send_input(painter.tiles[painter.position])
-    except KeyError:
-        painter.send_input(0)
+    painter.send_input(painter.tiles[painter.position])
 
 painter.print_image()
