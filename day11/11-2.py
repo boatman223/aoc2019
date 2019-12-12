@@ -1,5 +1,4 @@
 import itertools
-import numpy as np
 
 class Computer:
 
@@ -130,7 +129,7 @@ class Painter(Computer):
     def __init__(self, code, pc=0, stdin=None):
         super().__init__(code, pc, stdin)
         self.facing = 0
-        self.position = np.array([0,0])
+        self.position = (0,0)
         self.tiles = {(0,0): 1}
 
     def process_orders(self, data):
@@ -150,16 +149,16 @@ class Painter(Computer):
         self.facing = (self.facing + orders[1]) % 360
 
     def paint(self, orders):
-        self.tiles[tuple(self.position)] = orders[0]
+        self.tiles[self.position] = orders[0]
 
     def move(self):
         movement = {
-            0:   np.array([0,1]),
-            90:  np.array([1,0]),
-            180: np.array([0,-1]),
-            270: np.array([-1,0])
+            0:   (0,1),
+            90:  (1,0),
+            180: (0,-1),
+            270: (-1,0)
         }
-        self.position += movement[self.facing]
+        self.position = tuple(i+j for i, j in zip(movement[self.facing], self.position))
 
     def print_image(self):
         xvalues = [i[0] for i in self.tiles.keys()]
@@ -180,7 +179,7 @@ class Painter(Computer):
             for j in range(0, x_range[1]+x_adjust+1):
                 try: line += str(self.tiles[(j-x_adjust,i-y_adjust)])
                 except KeyError: line += '0'
-            print(line.replace('0', ' ').replace('1', '#'))
+            print(line.replace('0', '  ').replace('1', '##'))
 
 with open('input.txt','r') as fh:
     basecode = [int(i) for i in fh.read().strip('\n').split(',')]
@@ -191,7 +190,7 @@ while painter.status != painter.HALTED:
     orders = painter.get_output()
     painter.process_orders(orders)
     try:
-        painter.send_input(painter.tiles[tuple(painter.position)])
+        painter.send_input(painter.tiles[painter.position])
     except KeyError:
         painter.send_input(0)
 
