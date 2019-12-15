@@ -48,7 +48,6 @@ for i in recipes['FUEL'][1].keys():
 for i in children.keys():
     if i in ore.keys():
         print(i, children[i])
-        total += (children[i]/ore[i][1]) * ore[i][0]
-        spare = children[i] % ore[i][1]
+        total += children[i]/ore[i][1] * ore[i][0]
 
-print(1000000000000//total - 1)
+print(1000000000000//math.ceil(total))
