@@ -3,7 +3,7 @@ import math
 import itertools
 
 def find_children(target, children):
-    sets = math.ceil((children[target]-spare[target])/recipes[target][0])
+    sets = (children[target]-spare[target])/recipes[target][0]
     spare[target] = sets * recipes[target][0] - (children[target]-spare[target])
     for i in recipes[target][1].keys():
         if i == 'ORE': return children
@@ -37,7 +37,7 @@ y = collections.defaultdict(int)
 children = collections.defaultdict(int)
 for i in recipes['FUEL'][1].keys():
     print(i)
-    children[i] += recipes['FUEL'][1][i] * 2595245
+    children[i] += recipes['FUEL'][1][i]
     children = find_children(i, children)
     for j in children:
         if j not in ore.keys(): children[j] = 0
@@ -45,10 +45,10 @@ for i in recipes['FUEL'][1].keys():
 # print(spare)
 # print(children)
 
-
 for i in children.keys():
     if i in ore.keys():
         print(i, children[i])
-        total += math.ceil((children[i])/ore[i][1]) * ore[i][0]
+        total += (children[i]/ore[i][1]) * ore[i][0]
         spare = children[i] % ore[i][1]
-print(1000000000000-total)
+
+print(1000000000000//total - 1)
